@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ASTRONZ '26 | DSCET Aeronautical Engineering Symposium</title>
+  <meta name="description" content="ASTRONZ '26 — Annual Technical Symposium, Dept. of Aeronautical Engineering, DSCET Chennai."/>
+  <meta property="og:title" content="ASTRONZ '26 — Navigate the Future of Aviation"/>
+  <meta property="og:description" content="Annual Aeronautical Engineering Symposium, DSCET Chennai 2026"/>
+  <meta property="og:type" content="website"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-regular-rounded/css/uicons-regular-rounded.css"/>
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-bold-rounded/css/uicons-bold-rounded.css"/>
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-solid-rounded/css/uicons-solid-rounded.css"/>
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.6.0/uicons-brands/css/uicons-brands.css"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+<style>
+/* ══════════════════════════════════════════════════
+   ASTRONZ '26 — ECAM COMMAND DESIGN SYSTEM
+   Airbus A320 ECAM + FAA §25.1322 Color Standards
+   ══════════════════════════════════════════════════ */
+:root {
+  --bg-primary:    #0A0D1A;
+  --bg-panel:      #0E1628;
+  --bg-deep:       #060810;
+  --accent-amber:  #FFB700;
+  --accent-cyan:   #00D4FF;
+  --accent-mag:    #E040FB;
+  --text-primary:  #E8EDF2;
+  --metal:         #8FA3B1;
+  --status-red:    #FF3B3B;
+  --rwy-amber:     #FF8C00;
+  --glass-bg:      rgba(14,22,40,0.62);
+  --glass-bdr:     rgba(0,212,255,0.18);
+  --font-mono:     'Roboto Mono', monospace;
+  --font-body:     'Inter', sans-serif;
+  --glow-cyan:     0 0 20px rgba(0,212,255,0.45), 0 0 50px rgba(0,212,255,0.15);
+  --glow-amber:    0 0 20px rgba(255,183,0,0.5),  0 0 50px rgba(255,183,0,0.18);
+  --tglow-cyan:    0 0 12px rgba(0,212,255,0.7),  0 0 25px rgba(0,212,255,0.3);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-body);cursor:none;overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,212,255,0.014) 2px,rgba(0,212,255,0.014) 4px);pointer-events:none;z-index:9000}
+.glass{background:var(--glass-bg);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--glass-bdr);border-radius:12px}
+
+/* ─── Cursor ─── */
+#cursor{position:fixed;width:24px;height:24px;pointer-events:none;z-index:99999;transform:translate(-50%,-50%)}
+#cursor svg{width:100%;height:100%}
+.ctrail{position:fixed;border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%)}
+
+/* ══════════════════════════════════════════════════ PRELOADER */
+#preloader{position:fixed;inset:0;background:var(--bg-primary);z-index:10000;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .9s ease}
+#preloader.fade-out{opacity:0;pointer-events:none}
+.radar-cont{position:relative;width:280px;height:280px;margin-bottom:2rem}
+.radar-svg-static{position:absolute;inset:0;width:100%;height:100%}
+.radar-sweep-wrap{position:absolute;inset:0;border-radius:50%;overflow:hidden;animation:rspin 2.8s linear infinite;transform-origin:center}
+.radar-sweep-wrap::after{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0deg,transparent 295deg,rgba(0,212,255,0.04) 310deg,rgba(0,212,255,0.22) 345deg,rgba(0,212,255,0.82) 358deg,rgba(0,212,255,0.9) 360deg)}
+.radar-arm{position:absolute;width:50%;height:1.5px;background:linear-gradient(to right,transparent,rgba(0,212,255,0.95));top:50%;left:50%;transform-origin:left center;transform:translateY(-50%);box-shadow:0 0 8px rgba(0,212,255,0.9);animation:rspin 2.8s linear infinite}
+@keyframes rspin{to{transform:rotate(360deg)}}
+.rblip{position:absolute;width:5px;height:5px;border-radius:50%;background:var(--accent-cyan);box-shadow:0 0 8px var(--accent-cyan);transform:translate(-50%,-50%);opacity:0}
+.rb1{top:28%;left:65%;animation:bfade 2.8s .55s infinite}
+.rb2{top:63%;left:73%;animation:bfade 2.8s 1.15s infinite}
+.rb3{top:72%;left:37%;animation:bfade 2.8s .25s infinite}
+.rb4{top:34%;left:28%;animation:bfade 2.8s 1.85s infinite}
+.rb5{top:55%;left:58%;animation:bfade 2.8s .9s infinite}
+@keyframes bfade{0%,100%{opacity:0;transform:translate(-50%,-50%) scale(.5)}6%{opacity:1;transform:translate(-50%,-50%) scale(1.8)}25%{opacity:.5;transform:translate(-50%,-50%) scale(1)}50%{opacity:0}}
+.rctext{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none}
+.rctext{display:flex;align-items:baseline;gap:.35rem;white-space:nowrap}
+.rcm{font-family:var(--font-mono);font-size:1.9rem;font-weight:700;color:var(--accent-cyan);letter-spacing:.22em;text-shadow:var(--tglow-cyan)}
+.rcs{font-family:var(--font-mono);font-size:1.45rem;color:var(--accent-amber);letter-spacing:.08em}
+.plstat{font-family:var(--font-mono);font-size:.72rem;color:var(--metal);letter-spacing:.28em;text-align:center;animation:plblink 2.8s ease-in-out infinite}
+@keyframes plblink{0%,100%{opacity:.25}12%{opacity:1}40%{opacity:.25}}
+.plbar-wrap{width:280px;height:2px;background:rgba(0,212,255,.1);margin-top:1.2rem;overflow:hidden;border-radius:2px}
+.plbar{height:100%;background:linear-gradient(90deg,var(--accent-cyan),var(--accent-amber));width:0%;animation:plfill 3.5s cubic-bezier(.4,0,.2,1) forwards;box-shadow:0 0 8px var(--accent-cyan)}
+@keyframes plfill{to{width:100%}}
+
+/* ══════════════════════════════════════════════════ NAVBAR */
+#navbar{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 2rem;height:58px;display:flex;align-items:center;justify-content:space-between;background:rgba(10,13,26,.9);backdrop-filter:blur(14px);border-bottom:1px solid rgba(0,212,255,.13)}
+.nav-logo{font-family:var(--font-mono);font-size:1.05rem;font-weight:700;color:var(--accent-cyan);letter-spacing:.12em;text-shadow:var(--tglow-cyan);text-decoration:none}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{font-family:var(--font-mono);font-size:.68rem;color:var(--metal);text-decoration:none;letter-spacing:.15em;transition:color .2s,border-bottom .2s;padding-bottom:2px;border-bottom:1px solid transparent}
+.nav-links a:hover{color:var(--accent-amber);border-bottom-color:var(--accent-amber)}
+.nav-right{display:flex;align-items:center;gap:.9rem}
+.zulu{font-family:var(--font-mono);font-size:.62rem;color:var(--accent-amber);letter-spacing:.1em;background:rgba(255,183,0,.07);border:1px solid rgba(255,183,0,.25);padding:.28rem .7rem;border-radius:3px}
+.atcbtn{font-family:var(--font-mono);font-size:.6rem;color:var(--accent-cyan);background:rgba(0,212,255,.07);border:1px solid rgba(0,212,255,.25);padding:.28rem .7rem;border-radius:3px;cursor:none;letter-spacing:.08em;transition:all .2s}
+.atcbtn:hover{background:rgba(0,212,255,.14);box-shadow:var(--glow-cyan)}
+#scplane{position:fixed;right:1.4rem;top:68px;width:28px;z-index:490;filter:drop-shadow(0 0 5px var(--accent-cyan));opacity:.8;transition:top .12s linear}
+.alt-lbl{font-family:var(--font-mono);font-size:.43rem;color:var(--accent-cyan);letter-spacing:.06em;text-align:center;display:block;margin-top:3px}
+
+/* ══════════════════════════════════════════════════ MARQUEE DIVIDER */
+.marquee-wrap{overflow:hidden;width:100%;padding:14px 0;border-top:1px solid rgba(255,157,0,.18);border-bottom:1px solid rgba(255,157,0,.18);background:rgba(6,10,22,.35)}
+.marquee-track{display:flex;flex-wrap:nowrap;width:max-content;animation:marquee-loop 20s linear infinite;will-change:transform;transform:translate3d(0,0,0)}
+.marquee-group{display:inline-flex;align-items:center;gap:20px;padding-right:20px;color:var(--rwy-amber);font-family:var(--font-mono);font-size:1rem;white-space:nowrap;flex:0 0 auto}
+.marquee-plane{font-size:1.5rem;line-height:1;display:inline-flex;align-items:center}
+@keyframes marquee-loop{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-50%,0,0)}}
+
+/* ══════════════════════════════════════════════════ HERO */
+#hero{min-height:100vh;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:linear-gradient(160deg,rgba(10,13,26,.68) 0%,rgba(10,13,26,.92) 60%,#0A0D1A 100%),radial-gradient(ellipse 130% 80% at 55% 35%,rgba(0,212,255,.09) 0%,transparent 60%),radial-gradient(ellipse 70% 60% at 15% 70%,rgba(255,140,0,.08) 0%,transparent 55%),radial-gradient(ellipse 90% 70% at 85% 65%,rgba(224,64,251,.05) 0%,transparent 50%),linear-gradient(170deg,#040610 0%,#0a1530 25%,#08122a 50%,#070f20 75%,#050c18 100%)}
+.hero-bg::before{content:'';position:absolute;bottom:0;left:0;right:0;height:55%;background:linear-gradient(rgba(255,140,0,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,183,0,.04) 1px,transparent 1px);background-size:80px 55px;transform:perspective(500px) rotateX(52deg);transform-origin:bottom center;mask-image:linear-gradient(to top,rgba(0,0,0,.5) 0%,transparent 65%)}
+.hero-bg::after{content:'';position:absolute;inset:0;background:radial-gradient(circle 2px at 12% 20%,rgba(0,212,255,.7) 0%,transparent 100%),radial-gradient(circle 2px at 75% 15%,rgba(0,212,255,.5) 0%,transparent 100%),radial-gradient(circle 3px at 88% 52%,rgba(255,183,0,.6) 0%,transparent 100%),radial-gradient(circle 2px at 30% 75%,rgba(0,212,255,.4) 0%,transparent 100%),radial-gradient(circle 2px at 60% 82%,rgba(224,64,251,.5) 0%,transparent 100%),radial-gradient(circle 2px at 8% 88%,rgba(0,212,255,.35) 0%,transparent 100%),radial-gradient(circle 3px at 92% 28%,rgba(255,140,0,.5) 0%,transparent 100%)}
+.hero-cont{position:relative;z-index:10;padding:2rem;max-width:min(980px,94vw);width:100%;text-align:center}
+.hero-hud{padding:3.2rem 3.5rem;position:relative;border-radius:12px}
+.hero-hud::before{content:'';position:absolute;top:-1px;left:15%;right:15%;height:2px;background:linear-gradient(to right,transparent,var(--accent-cyan),transparent);box-shadow:0 0 14px var(--accent-cyan)}
+.hero-hud::after{content:'';position:absolute;bottom:-1px;left:15%;right:15%;height:2px;background:linear-gradient(to right,transparent,var(--accent-amber),transparent);box-shadow:0 0 12px var(--accent-amber)}
+.hero-badge{display:inline-block;font-family:var(--font-mono);font-size:.62rem;color:var(--accent-cyan);letter-spacing:.3em;border:1px solid var(--accent-cyan);padding:.35rem 1.1rem;border-radius:999px;margin-bottom:1.6rem;background:rgba(0,212,255,.06);text-shadow:var(--tglow-cyan)}
+.hero-title{font-family:var(--font-mono);font-weight:700;line-height:.96}
+.ht1{display:block;font-size:clamp(1rem,2.5vw,1.6rem);color:var(--metal);letter-spacing:.3em;margin-bottom:.3rem}
+.ht2{display:block;font-size:clamp(2.35rem,8vw,5.8rem);color:var(--text-primary);letter-spacing:.015em;word-spacing:-.16em;white-space:nowrap;text-shadow:0 0 40px rgba(0,212,255,.4),0 0 80px rgba(0,212,255,.15)}
+.hero-div{height:1px;margin:1.4rem 0;background:linear-gradient(to right,transparent,var(--accent-amber),transparent);opacity:.5}
+.hero-sub{font-family:var(--font-body);font-size:clamp(.9rem,2vw,1.15rem);color:var(--metal);font-style:italic;font-weight:300;margin-bottom:2rem}
+.cta-wrap{display:flex;justify-content:center;margin-bottom:1.8rem}
+.cta-btn{display:inline-flex;align-items:stretch;text-decoration:none;cursor:none;overflow:hidden;border:none;transition:transform .25s,box-shadow .25s;position:relative;border-radius:0 32px 32px 0}
+.cta-btn:hover{transform:scale(1.04);box-shadow:0 0 30px rgba(255,183,0,.7),0 0 60px rgba(255,183,0,.25)}
+.cta-btn::before,.cta-btn::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:var(--bg-primary);z-index:5;left:38px}
+.cta-btn::before{top:-7px}.cta-btn::after{bottom:-7px}
+.cta-l{background:rgba(255,183,0,.15);border:1.5px solid var(--accent-amber);border-right:none;padding:0 1.1rem;display:flex;align-items:center;justify-content:center;font-size:1.4rem;width:54px}
+.cta-sep{width:1px;background:repeating-linear-gradient(to bottom,var(--accent-amber) 0,var(--accent-amber) 5px,transparent 5px,transparent 10px);flex-shrink:0}
+.cta-r{background:var(--accent-amber);padding:.85rem 1.8rem;text-align:left;display:flex;flex-direction:column;justify-content:center}
+.cta-main{font-family:var(--font-mono);font-size:.82rem;color:var(--bg-primary);font-weight:700;letter-spacing:.14em}
+.cta-sub{font-family:var(--font-body);font-size:.6rem;color:rgba(10,13,26,.7);letter-spacing:.06em}
+.scroll-hint{font-family:var(--font-mono);font-size:.57rem;color:rgba(143,163,177,.5);letter-spacing:.25em;animation:blink 2.8s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* ══════════════════════════════════════════════════ EVENTS */
+#events{padding:7rem 2rem 4rem;position:relative;background:repeating-linear-gradient(45deg,rgba(0,212,255,.022) 1px,transparent 1px,transparent 40px,rgba(0,212,255,.022) 40px,rgba(0,212,255,.022) 41px,transparent 41px),var(--bg-primary)}
+#events::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(0,212,255,.3),transparent)}
+.sec-hdr{text-align:center;margin-bottom:2.8rem}
+.sec-lbl{font-family:var(--font-mono);font-size:.58rem;color:var(--accent-amber);letter-spacing:.4em;opacity:.8;margin-bottom:.5rem}
+.sec-ttl{font-family:var(--font-mono);font-size:clamp(1.2rem,2.8vw,2rem);color:var(--text-primary);letter-spacing:.12em;font-weight:700}
+.sec-sub{font-family:var(--font-body);color:var(--metal);font-size:.88rem;margin-top:.5rem;letter-spacing:.04em}
+.rwy-bar{overflow:hidden;height:2.2rem;display:flex;align-items:center;margin:.8rem 0}
+.rwy-txt{font-family:var(--font-mono);font-size:1.1rem;white-space:nowrap;color:var(--rwy-amber);letter-spacing:.3em;text-shadow:0 0 8px rgba(255,140,0,.5);animation:rscroll 6s linear infinite}
+@keyframes rscroll{to{transform:translateX(-50%)}}
+
+/* ─── FIX 2: Bulletproof runway scroll ─── */
+.runway-scroll-outer{overflow:hidden;width:100%;white-space:nowrap;margin:.8rem 0;height:2.4rem;display:flex;align-items:center}
+.runway-scroll-inner{display:flex;flex-wrap:nowrap;width:max-content;animation:runway-loop 14s linear infinite;will-change:transform;transform:translate3d(0,0,0)}
+.runway-scroll-outer:hover .runway-scroll-inner{animation-play-state:paused}
+.runway-group{display:inline-flex;flex-wrap:nowrap;flex:0 0 auto}
+.runway-track{display:inline-block;color:var(--rwy-amber);font-family:var(--font-mono);font-size:1.2rem;padding-right:2rem;letter-spacing:.1em;text-shadow:0 0 8px rgba(255,140,0,.5);flex:0 0 auto}
+@keyframes runway-loop{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-50%,0,0)}}
+.terminals{display:grid;grid-template-columns:1fr 1fr;gap:1.8rem;max-width:1160px;margin:0 auto 2.5rem}
+.tpanel{border-radius:12px;overflow:hidden}
+.thdr{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.3rem;font-family:var(--font-mono);font-size:.7rem;font-weight:700;letter-spacing:.14em}
+.tha{background:linear-gradient(90deg,var(--accent-cyan) 0%,rgba(0,212,255,.2) 100%);color:var(--bg-primary)}
+.thb{background:linear-gradient(90deg,var(--accent-amber) 0%,rgba(255,183,0,.2) 100%);color:var(--bg-primary)}
+.thl{display:flex;align-items:center;gap:.7rem}
+.thr{font-size:.6rem;opacity:.75;letter-spacing:.08em}
+.led{width:9px;height:9px;border-radius:50%;flex-shrink:0;animation:ledp 1.5s ease-in-out infinite}
+.leda{background:rgba(10,13,26,.6);box-shadow:0 0 5px rgba(10,13,26,.8)}
+.ledb{background:rgba(10,13,26,.5)}
+@keyframes ledp{0%,100%{opacity:1}50%{opacity:.3}}
+.elist{background:rgba(6,10,22,.65)}
+.erow{border-bottom:1px solid rgba(0,212,255,.08);cursor:none;transition:background .2s}
+.erow:last-child{border-bottom:none}
+.erow:hover,.erow.expanded{background:rgba(0,212,255,.05)}
+.emain{display:flex;align-items:center;padding:0 1.2rem;height:68px;gap:0;border-left:3px solid transparent;transition:border-color .2s;cursor:none}
+.erow:hover .emain,.erow.expanded .emain{border-left-color:var(--accent-cyan)}
+.eflt{font-family:var(--font-mono);font-size:.62rem;color:rgba(143,163,177,.55);width:52px;flex-shrink:0;letter-spacing:.04em}
+.eico-wrap{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:rgba(0,212,255,.08);border-radius:8px;border:1px solid rgba(0,212,255,.2);flex-shrink:0}
+.eico-wrap i,.eico-wrap .fi{font-size:1.1rem;color:var(--accent-cyan)}
+.enm{font-family:var(--font-mono);font-size:.74rem;color:var(--text-primary);font-weight:500;letter-spacing:.07em;flex:1;padding:0 .6rem}
+.etm{font-family:var(--font-mono);font-size:.58rem;color:var(--metal);width:80px;flex-shrink:0;letter-spacing:.04em}
+.sbadge{font-family:var(--font-mono);font-size:.52rem;letter-spacing:.1em;padding:.2rem .55rem;border-radius:3px;font-weight:700;flex-shrink:0}
+.sba{background:rgba(255,183,0,.14);color:var(--accent-amber);border:1px solid rgba(255,183,0,.3)}
+.sbo{background:rgba(0,212,255,.1);color:var(--accent-cyan);border:1px solid rgba(0,212,255,.25)}
+.sbf{background:rgba(255,59,59,.12);color:var(--status-red);border:1px solid rgba(255,59,59,.3);animation:fglow 1.5s ease-in-out infinite}
+@keyframes fglow{0%,100%{box-shadow:none}50%{box-shadow:0 0 10px rgba(255,59,59,.4)}}
+.exbtn{font-family:var(--font-mono);font-size:.65rem;color:var(--metal);cursor:none;padding:0 .6rem 0 .4rem;transition:color .2s,transform .25s;background:none;border:none;letter-spacing:.08em;flex-shrink:0}
+.exbtn:hover{color:var(--accent-cyan)}
+.exbtn.open{transform:rotate(180deg);color:var(--accent-cyan)}
+
+/* ─── FIX 1: Modal overlay ─── */
+#event-modal-overlay{
+  position:fixed;inset:0;background:rgba(10,13,26,.88);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  z-index:2000;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .25s ease
+}
+#event-modal-overlay.active{opacity:1;pointer-events:all}
+#event-modal-card{
+  background:rgba(14,22,40,.97);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(0,212,255,.25);border-radius:16px;
+  padding:2rem;max-width:600px;width:90vw;
+  transform:scale(.92);opacity:0;
+  transition:transform .25s ease-out,opacity .25s ease-out;
+  max-height:88vh;overflow-y:auto;
+}
+#event-modal-overlay.active #event-modal-card{transform:scale(1);opacity:1}
+.modal-header{display:flex;align-items:center;gap:.85rem;margin-bottom:1rem}
+.modal-flt-badge{font-family:var(--font-mono);font-size:.68rem;font-weight:700;background:var(--accent-amber);color:var(--bg-primary);padding:.25rem .6rem;border-radius:4px;letter-spacing:.08em;flex-shrink:0}
+.modal-icon-wrap{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;background:rgba(255,183,0,.1);border-radius:10px;border:1px solid rgba(255,183,0,.25);flex-shrink:0}
+.modal-icon-wrap i,.modal-icon-wrap .fi{font-size:1.5rem;color:var(--accent-amber)}
+.modal-title{font-family:var(--font-mono);font-size:1.15rem;color:var(--text-primary);font-weight:700;letter-spacing:.08em;flex:1}
+.modal-close{background:none;border:none;color:var(--metal);font-size:1.5rem;cursor:none;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:4px;transition:color .2s,background .2s;flex-shrink:0;font-family:var(--font-body)}
+.modal-close:hover{color:var(--accent-amber);background:rgba(255,183,0,.1)}
+.modal-sep{height:1px;background:linear-gradient(to right,transparent,rgba(0,212,255,.35),transparent);margin-bottom:1.2rem}
+.modal-desc{font-family:var(--font-body);font-size:.92rem;color:var(--metal);line-height:1.65;margin-bottom:1rem}
+.modal-rules{list-style:none;margin-bottom:1rem}
+.modal-rules li{font-family:var(--font-mono);font-size:.75rem;color:var(--metal);padding:.22rem 0;opacity:0;transform:translateX(-12px);transition:opacity .3s ease,transform .3s ease}
+.modal-rules li.rule-vis{opacity:1;transform:translateX(0)}
+.modal-rules li::before{content:'[ ✓ ] ';color:var(--accent-amber)}
+.modal-crew-label{font-family:var(--font-mono);font-size:.6rem;color:var(--accent-cyan);letter-spacing:.3em;margin-bottom:.4rem}
+.modal-crew-names{font-family:var(--font-mono);font-size:.72rem;color:var(--accent-amber);letter-spacing:.05em;margin-bottom:1.1rem;line-height:1.6}
+.modal-footer-row{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;padding-top:.8rem;border-top:1px solid rgba(0,212,255,.1)}
+.modal-team-badge{font-family:var(--font-mono);font-size:.62rem;color:var(--accent-cyan);border:1px solid rgba(0,212,255,.3);padding:.25rem .7rem;border-radius:4px;letter-spacing:.06em}
+.modal-fee-badge{font-family:var(--font-mono);font-size:.62rem;color:var(--accent-amber);border:1px solid rgba(255,183,0,.3);padding:.25rem .7rem;border-radius:4px;letter-spacing:.06em}
+
+/* ══════════════════════════════════════════════════ CLEARANCE SEQUENCE */
+.phase-overlay{position:fixed;inset:0;background:#030508;z-index:3000;display:none;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+.phase-overlay.active{display:flex}
+.stars-bg{position:absolute;inset:0}
+.phase{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;width:100%;max-width:680px;padding:2rem;position:relative;z-index:10}
+.phase.show{display:flex;animation:phaseIn .5s ease-out forwards}
+@keyframes phaseIn{from{opacity:0;transform:scale(.94) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.canister{width:200px;height:130px;margin:0 auto 1.5rem;position:relative}
+.canister-body{width:100%;height:100%;border-radius:12px;border:2px solid var(--accent-cyan);background:linear-gradient(135deg,rgba(0,80,120,.5),rgba(14,22,40,.9));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;animation:canisterLoad 1s ease-in-out}
+@keyframes canisterLoad{from{transform:scale(.7) rotate(-4deg);opacity:0}to{transform:scale(1) rotate(0deg);opacity:1}}
+.canister-label{font-family:var(--font-mono);font-size:.65rem;color:var(--accent-cyan);letter-spacing:.2em}
+.canister-logo{font-family:var(--font-mono);font-size:.55rem;color:rgba(0,212,255,.5);letter-spacing:.1em}
+.arm{width:4px;height:60px;background:linear-gradient(to bottom,var(--metal),#4a6070);border-radius:2px;margin:0 auto;animation:armLower 1.2s .3s ease-in-out both;transform-origin:top center}
+@keyframes armLower{from{transform:scaleY(0);opacity:0}to{transform:scaleY(1);opacity:1}}
+.arm-head{width:28px;height:12px;background:var(--metal);border-radius:3px;margin:-2px auto 0}
+.status-panel{border:1px solid rgba(0,212,255,.3);border-radius:10px;background:rgba(14,22,40,.9);padding:1.6rem 2.4rem;margin-bottom:1rem;min-width:300px}
+.status-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:.8rem}
+.status-dot{width:14px;height:14px;border-radius:50%;background:#00FF87;box-shadow:0 0 12px #00FF87;animation:dotPulse 1s ease-in-out infinite}
+@keyframes dotPulse{0%,100%{box-shadow:0 0 8px #00FF87}50%{box-shadow:0 0 22px #00FF87,0 0 40px rgba(0,255,135,.3)}}
+.status-text{font-family:var(--font-mono);font-size:.82rem;color:#00FF87;letter-spacing:.18em;font-weight:700}
+.status-sub{font-family:var(--font-mono);font-size:.6rem;color:rgba(143,163,177,.6);letter-spacing:.15em}
+.phase-header{font-family:var(--font-mono);font-size:.7rem;color:var(--accent-cyan);letter-spacing:.3em;margin-bottom:.5rem}
+.phase-big{font-family:var(--font-mono);font-size:clamp(1rem,3.5vw,1.7rem);font-weight:700;color:var(--text-primary);letter-spacing:.1em}
+.aircraft-silhouette{width:280px;margin:0 auto 1.5rem;filter:drop-shadow(0 0 18px rgba(0,212,255,.35));animation:aircraftReveal 1.2s ease-out}
+@keyframes aircraftReveal{from{transform:translateX(-30px);opacity:0}to{transform:translateX(0);opacity:1}}
+.checklist{border:1px solid rgba(0,212,255,.2);border-radius:8px;background:rgba(0,212,255,.04);padding:1rem 1.5rem;text-align:left;min-width:260px}
+.check-item{font-family:var(--font-mono);font-size:.68rem;color:var(--metal);letter-spacing:.08em;padding:.22rem 0;display:flex;gap:10px;align-items:center}
+.check-ok{color:#00FF87;font-size:.65rem}
+.hum-bar{height:3px;width:80%;margin:1rem auto 0;border-radius:2px;background:rgba(0,212,255,.15);overflow:hidden}
+.hum-fill{height:100%;background:linear-gradient(to right,var(--accent-cyan),var(--accent-amber));animation:humFill 1.5s ease-out forwards;width:0%}
+@keyframes humFill{to{width:100%}}
+.liftoff-scene{width:320px;margin:0 auto 1.2rem;position:relative;height:200px}
+.engine-plume{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:60px;border-radius:50% 50% 20% 20% / 60% 60% 30% 30%;animation:plumeBlast .4s ease-in-out infinite alternate}
+@keyframes plumeBlast{from{height:80px;opacity:.85;filter:blur(2px)}to{height:110px;opacity:1;filter:blur(4px)}}
+.aircraft-liftoff{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);animation:liftOff 2s ease-in forwards}
+@keyframes liftOff{0%{transform:translateX(-50%) translateY(0) scale(1)}100%{transform:translateX(-50%) translateY(-160px) scale(.45)}}
+.shake{animation:screenShake .18s ease-in-out infinite}
+@keyframes screenShake{0%{transform:translate(0,0)}25%{transform:translate(-2px,1px)}75%{transform:translate(2px,-1px)}100%{transform:translate(0,0)}}
+.liftoff-text{font-family:var(--font-mono);font-size:.62rem;color:rgba(143,163,177,.55);letter-spacing:.18em;position:static;z-index:20;text-align:center;line-height:1.5;margin-top:.7rem}
+.vortex-ring{position:absolute;border-radius:50%;border:1.5px solid rgba(255,183,0,.4);animation:vortex 1.8s ease-out infinite}
+@keyframes vortex{0%{transform:scale(.5);opacity:.7}100%{transform:scale(2.5);opacity:0}}
+.phase-dots{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:20}
+.pdot{width:7px;height:7px;border-radius:50%;background:rgba(143,163,177,.25);border:1px solid rgba(143,163,177,.3);transition:all .3s}
+.pdot.active{background:var(--accent-amber);border-color:var(--accent-amber);box-shadow:0 0 8px var(--accent-amber)}
+.seq-skip{position:absolute;top:18px;right:22px;font-family:var(--font-mono);font-size:.58rem;color:rgba(143,163,177,.4);letter-spacing:.12em;cursor:none;border:1px solid rgba(143,163,177,.2);padding:.25rem .6rem;border-radius:4px;z-index:20;transition:all .2s}
+.seq-skip:hover{color:var(--metal);border-color:rgba(143,163,177,.4)}
+.scanlines{position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,212,255,.012) 2px,rgba(0,212,255,.012) 4px);pointer-events:none;z-index:30}
+.phase4-actions{display:flex;justify-content:center;gap:.7rem;flex-wrap:wrap;margin-top:1.2rem}
+.phase4-btn{font-family:var(--font-mono);font-size:.7rem;background:rgba(255,183,0,.1);border:1px solid rgba(255,183,0,.35);padding:.6rem 1.2rem;border-radius:30px;cursor:none;letter-spacing:.12em;transition:all .2s;color:var(--accent-amber)}
+.phase4-btn:hover{background:rgba(255,183,0,.2)}
+
+/* Boarding pass */
+.bpass{max-width:1160px;margin:0 auto;display:flex;align-items:stretch;background:var(--text-primary);border-radius:10px;overflow:hidden;box-shadow:0 10px 50px rgba(0,0,0,.4);transform:rotate(-.4deg);position:relative}
+.bpl{flex:3;padding:1.5rem 2rem;position:relative}
+.bpm{font-family:var(--font-mono);font-size:1.1rem;color:var(--bg-primary);font-weight:700;letter-spacing:.1em;margin-bottom:.3rem}
+.bps{font-family:var(--font-mono);font-size:.62rem;color:rgba(10,13,26,.55);letter-spacing:.12em;margin-bottom:.8rem}
+.bpi{display:flex;gap:2rem;font-family:var(--font-mono);font-size:.62rem;color:rgba(10,13,26,.6);letter-spacing:.08em}
+.bpi span{color:var(--bg-primary);font-weight:600}
+.bpnt,.bpnb{position:absolute;width:18px;height:18px;border-radius:50%;background:var(--bg-primary);right:-9px}
+.bpnt{top:-9px}.bpnb{bottom:-9px}
+.bpdiv{width:1px;flex-shrink:0;align-self:stretch;background:repeating-linear-gradient(to bottom,var(--accent-amber) 0,var(--accent-amber) 6px,transparent 6px,transparent 12px);margin:.5rem 0}
+.bpr{flex:1.5;padding:1.5rem;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.bpprice{font-family:var(--font-mono);font-size:2.3rem;font-weight:700;color:var(--accent-amber);text-shadow:0 2px 10px rgba(255,183,0,.3)}
+.bppl{font-family:var(--font-mono);font-size:.58rem;color:rgba(10,13,26,.55);letter-spacing:.1em;margin-top:.2rem}
+.bpbc{height:22px;width:100%;margin-top:.8rem;background:repeating-linear-gradient(90deg,rgba(10,13,26,.5) 0,rgba(10,13,26,.5) 2px,transparent 2px,transparent 4px,rgba(10,13,26,.3) 4px,rgba(10,13,26,.3) 5px,transparent 5px,transparent 8px)}
+
+/* ══════════════════════════════════════════════════ CREW */
+#crew{padding:6rem 2rem;background:linear-gradient(180deg,var(--bg-primary) 0%,var(--bg-panel) 100%);position:relative}
+#crew::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(255,183,0,.3),transparent)}
+.crow{margin-bottom:3rem}
+.crow-lbl{font-family:var(--font-mono);font-size:.62rem;color:var(--metal);letter-spacing:.3em;opacity:.55;text-align:center;margin-bottom:1.6rem}
+.cgrid{display:flex;gap:1.6rem;justify-content:center;flex-wrap:wrap}
+.ibadge{width:240px;border-radius:10px;overflow:hidden;cursor:none;transition:transform .3s,box-shadow .3s;position:relative}
+.ibadge:hover{transform:translateY(-10px);box-shadow:0 20px 60px rgba(0,212,255,.2),0 0 0 1px rgba(0,212,255,.3)}
+.lhole{position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:14px;height:14px;border-radius:50%;background:var(--bg-panel);border:2px solid var(--accent-amber);z-index:5}
+.btop{background:linear-gradient(90deg,var(--accent-amber),var(--rwy-amber));height:38px;padding:0 1rem;display:flex;align-items:center;justify-content:space-between}
+.bwings{font-size:.95rem;letter-spacing:.2em;transition:letter-spacing .4s}
+.ibadge:hover .bwings{letter-spacing:.5em}
+.borgtext{font-family:var(--font-mono);font-size:.48rem;color:rgba(10,13,26,.75);letter-spacing:.12em;text-align:right}
+.bbody{background:rgba(6,10,22,.8);padding:1.2rem 1rem;text-align:center}
+.bavatar{width:72px;height:72px;border-radius:50%;margin:0 auto .9rem;display:flex;align-items:center;justify-content:center;font-size:1.8rem;position:relative;background:linear-gradient(135deg,#1C2A3A,#2E3F52)}
+.avs{border:2px solid var(--accent-amber);box-shadow:0 0 18px rgba(255,183,0,.3)}
+.avc{border:2px solid var(--metal);box-shadow:0 0 12px rgba(143,163,177,.2)}
+.rstripes{position:absolute;bottom:3px;right:3px;display:flex;flex-direction:column;gap:2px}
+.rs{width:10px;height:2px;border-radius:1px}
+.rsg{background:var(--accent-amber)}
+.rss{background:var(--metal)}
+.bname{font-family:var(--font-mono);font-size:.82rem;font-weight:700;color:var(--text-primary);letter-spacing:.05em;margin-bottom:.2rem}
+.brole{font-family:var(--font-body);font-size:.68rem;color:var(--metal);margin-bottom:.55rem}
+.bfreq{font-family:var(--font-mono);font-size:.62rem;color:var(--accent-amber);letter-spacing:.07em}
+.bid{font-family:var(--font-mono);font-size:.5rem;color:rgba(143,163,177,.4);letter-spacing:.08em;margin-top:.3rem}
+.bbarcode{height:24px;background:repeating-linear-gradient(90deg,rgba(0,212,255,.45) 0,rgba(0,212,255,.45) 2px,transparent 2px,transparent 4px,rgba(0,212,255,.25) 4px,rgba(0,212,255,.25) 5.5px,transparent 5.5px,transparent 8px)}
+
+/* ══════════════════════════════════════════════════ FOOTER */
+#footer{position:relative;overflow:hidden;padding:4rem 2rem 0;background:var(--bg-deep);border-top:1px solid rgba(0,212,255,.1)}
+.fsweep{position:absolute;inset:0;background:conic-gradient(from 0deg,transparent 0deg,transparent 345deg,rgba(0,212,255,.04) 358deg,rgba(0,212,255,.07) 360deg);animation:rspin 12s linear infinite;transform-origin:50% 50%;pointer-events:none;opacity:.5}
+#footer::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 55px,rgba(0,212,255,.018) 55px,rgba(0,212,255,.018) 56px),repeating-linear-gradient(90deg,transparent,transparent 55px,rgba(0,212,255,.018) 55px,rgba(0,212,255,.018) 56px);pointer-events:none}
+.frwy{position:relative;z-index:2;overflow:hidden;height:2.6rem;display:flex;align-items:center;margin-bottom:3rem}
+.frwy-track{display:flex;flex-wrap:nowrap;width:max-content;animation:frwy-loop 7.5s linear infinite;will-change:transform;transform:translate3d(0,0,0)}
+.frwy-group{display:inline-flex;align-items:center;flex:0 0 auto;padding-right:1rem}
+.frwy-txt{display:inline-block;font-size:1.4rem;white-space:nowrap;color:var(--rwy-amber);letter-spacing:.3em;text-shadow:0 0 8px rgba(255,140,0,.6);flex:0 0 auto}
+@keyframes frwy-loop{0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-50%,0,0)}}
+.floc{position:relative;z-index:2;text-align:center;margin-bottom:3rem}
+.chwrap{width:90px;height:90px;position:relative;margin:0 auto 1.5rem}
+.chring{position:absolute;border-radius:50%;border:1.5px solid var(--accent-amber);top:50%;left:50%;transform:translate(-50%,-50%) scale(.3);opacity:0;animation:crpulse 2.6s ease-out infinite}
+.chring:nth-child(1){width:32px;height:32px;animation-delay:0s}
+.chring:nth-child(2){width:60px;height:60px;animation-delay:.75s}
+.chring:nth-child(3){width:90px;height:90px;animation-delay:1.5s}
+@keyframes crpulse{0%{opacity:.9;transform:translate(-50%,-50%) scale(.3)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.1)}}
+.chh,.chv{position:absolute;top:50%;left:50%;background:var(--text-primary)}
+.chh{width:24px;height:1.5px;transform:translate(-50%,-50%)}
+.chv{width:1.5px;height:24px;transform:translate(-50%,-50%)}
+.chdot{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--accent-amber);top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 0 10px var(--accent-amber);animation:dpulse 1.3s ease-in-out infinite}
+@keyframes dpulse{0%,100%{box-shadow:0 0 6px var(--accent-amber)}50%{box-shadow:0 0 18px var(--accent-amber),0 0 35px rgba(255,183,0,.35)}}
+.locked{font-family:var(--font-mono);font-size:.62rem;color:var(--accent-amber);letter-spacing:.45em;text-shadow:0 0 10px rgba(255,183,0,.5);margin-bottom:.6rem;animation:blink 2s ease-in-out infinite}
+.cname{font-family:var(--font-mono);font-size:clamp(.68rem,1.4vw,.88rem);font-weight:700;color:var(--text-primary);letter-spacing:.1em;line-height:1.5;margin-bottom:.35rem}
+.dline{font-family:var(--font-mono);font-size:.72rem;color:var(--accent-cyan);letter-spacing:.18em;margin-bottom:.3rem}
+.aline{font-family:var(--font-body);font-size:.8rem;color:var(--metal);font-style:italic}
+.srow{display:flex;justify-content:center;gap:.8rem;margin-bottom:3rem;position:relative;z-index:2}
+.sbtn{width:48px;height:48px;display:flex;align-items:center;justify-content:center;border:1px solid var(--accent-amber);background:rgba(255,183,0,.08);border-radius:4px;cursor:none;transition:all .22s;font-family:var(--font-mono);font-size:.7rem;color:var(--accent-amber);text-decoration:none;font-weight:600}
+.sbtn:hover{background:var(--accent-amber);color:var(--bg-primary);box-shadow:var(--glow-amber)}
+.fcopy{position:relative;z-index:2;border-top:1px solid rgba(0,212,255,.07);padding:1rem 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.3rem}
+.fcm{font-family:var(--font-mono);font-size:.58rem;color:rgba(143,163,177,.4);letter-spacing:.14em}
+.fcs{font-family:var(--font-mono);font-size:.5rem;color:rgba(143,163,177,.25);letter-spacing:.1em}
+
+/* Animations */
+.fiu{opacity:0;transform:translateY(28px);transition:opacity .75s ease,transform .75s ease}
+.fiu.vis{opacity:1;transform:translateY(0)}
+
+/* Responsive */
+@media(max-width:1200px){
+  #events,#crew,#footer{padding-left:1.4rem;padding-right:1.4rem}
+  .hero-cont{max-width:94vw}
+  .hero-hud{padding:2.7rem 2.3rem}
+  .ht2{font-size:clamp(2.2rem,9vw,5rem)}
+}
+@media(max-width:992px){
+  .hero-hud{padding:2.2rem 1.7rem}
+  .hero-badge{font-size:.54rem;letter-spacing:.22em;padding:.3rem .8rem}
+  .ht1{letter-spacing:.18em}
+  .ht2{font-size:clamp(2rem,10vw,4.3rem)}
+  .terminals{gap:1.1rem}
+  .bpi{gap:1rem;flex-wrap:wrap}
+}
+@media(max-width:768px){
+  body{cursor:auto}
+  #cursor,.ctrail,#scplane{display:none}
+  .atcbtn,.sbtn,.cta-btn,.exbtn,.erow,.ibadge,.modal-close,#proceedToEvents,#backHomeBtn,.seq-skip{cursor:pointer}
+  .terminals{grid-template-columns:1fr}
+  .hero-cont{padding:1rem}
+  .hero-hud{padding:1.55rem 1rem}
+  .hero-badge{font-size:.5rem;letter-spacing:.16em;padding:.26rem .62rem}
+  .ht1{font-size:clamp(.82rem,2.6vw,1rem);letter-spacing:.11em}
+  .ht2{font-size:clamp(1.85rem,11.5vw,3.7rem);letter-spacing:.01em;word-spacing:-.14em}
+  .nav-links{display:none}
+  .nav-right{gap:.5rem}
+  .etm{display:none}
+  .cta-wrap{margin-bottom:1.2rem}
+  .cta-btn{width:min(92vw,430px)}
+  .cta-r{flex:1;min-width:0;padding:.74rem 1rem}
+  .cta-main{font-size:.72rem;letter-spacing:.1em}
+  .cta-sub{font-size:.56rem}
+  .fcopy{justify-content:center}
+  .frwy{height:2.2rem}
+  .frwy-txt{font-size:1.1rem;letter-spacing:.2em}
+  .phase{max-width:94vw;padding:4.2rem 1rem 2rem}
+  .liftoff-scene{width:260px;height:160px}
+  .liftoff-text{position:static;text-align:center;margin-top:.8rem;letter-spacing:.12em;line-height:1.45}
+  .phase-dots{bottom:10px}
+  .seq-skip{top:10px;right:12px}
+}
+@media(max-width:600px){
+  .zulu{display:none}
+  .sec-sub{font-size:.8rem}
+  .bpi{display:grid;gap:.4rem}
+  .phase-big{font-size:clamp(1rem,7vw,1.4rem)}
+  .phase4-actions{gap:.55rem}
+  #proceedToEvents,#backHomeBtn{width:min(92vw,320px);padding:.72rem 1rem;font-size:.64rem}
+}
+@media(max-width:480px){
+  .ht1{letter-spacing:.08em}
+  .ht2{font-size:clamp(1.65rem,10.8vw,3rem);letter-spacing:.008em;word-spacing:-.1em}
+  .rcm{font-size:1.3rem;letter-spacing:.16em}
+  .rcs{font-size:1.3rem;letter-spacing:.05em}
+  .hero-sub{font-size:.95rem;margin-bottom:1.3rem}
+  .cta-l{width:48px;font-size:1.15rem;padding:0 .85rem}
+  .cta-btn::before,.cta-btn::after{left:32px}
+  .bpass{flex-direction:column;transform:none}
+  .bpdiv{width:100%;height:1px;margin:0;background:repeating-linear-gradient(to right,var(--accent-amber) 0,var(--accent-amber) 6px,transparent 6px,transparent 12px)}
+  .frwy-txt{font-size:.92rem;letter-spacing:.12em}
+  .phase{padding:4.4rem .85rem 1.6rem}
+  .liftoff-scene{width:220px;height:140px;margin-bottom:.4rem}
+  .checklist{min-width:0;width:100%;padding:.9rem .85rem}
+  .liftoff-text{font-size:.56rem;letter-spacing:.1em}
+}
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div id="cursor">
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="10" stroke="#00D4FF" stroke-width="1.2"/>
+    <circle cx="12" cy="12" r="4"  stroke="#00D4FF" stroke-width=".8"/>
+    <line x1="12" y1="2"  x2="12" y2="7"  stroke="#00D4FF" stroke-width="1.5"/>
+    <line x1="12" y1="17" x2="12" y2="22" stroke="#00D4FF" stroke-width="1.5"/>
+    <line x1="2"  y1="12" x2="7"  y2="12" stroke="#00D4FF" stroke-width="1.5"/>
+    <line x1="17" y1="12" x2="22" y2="12" stroke="#00D4FF" stroke-width="1.5"/>
+    <circle cx="12" cy="12" r="2" fill="#FFB700"/>
+  </svg>
+</div>
+
+<!-- ══ PRELOADER ══ -->
+<section id="preloader" role="region" aria-label="Loading">
+  <div class="radar-cont">
+    <svg class="radar-svg-static" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="140" cy="140" r="136" stroke="rgba(0,212,255,0.3)" stroke-width="2"/>
+      <circle cx="140" cy="140" r="90"  stroke="rgba(0,212,255,0.2)" stroke-width="1"/>
+      <circle cx="140" cy="140" r="45"  stroke="rgba(255,183,0,0.4)"  stroke-width="1"/>
+      <line x1="140" y1="4" x2="140" y2="276" stroke="rgba(0,212,255,0.1)" stroke-width="1"/>
+      <line x1="4" y1="140" x2="276" y2="140" stroke="rgba(0,212,255,0.1)" stroke-width="1"/>
+    </svg>
+    <div class="radar-sweep-wrap"></div>
+    <div class="radar-arm" style="position:absolute;width:50%;height:1.5px;background:linear-gradient(to right,transparent,rgba(0,212,255,0.95));top:50%;left:50%;transform-origin:left center;transform:translateY(-50%);box-shadow:0 0 8px rgba(0,212,255,0.9);animation:rspin 2.8s linear infinite;"></div>
+    <div class="rblip rb1"></div><div class="rblip rb2"></div>
+    <div class="rblip rb3"></div><div class="rblip rb4"></div><div class="rblip rb5"></div>
+    <div class="rctext"><div class="rcm">ASTRONZ</div><div class="rcs">'26</div></div>
+  </div>
+  <p class="plstat">ESTABLISHING CONNECTION TO TOWER...</p>
+  <div class="plbar-wrap"><div class="plbar"></div></div>
+</section>
+
+<!-- ══ NAVBAR ══ -->
+<nav id="navbar" aria-label="Main Navigation">
+  <a href="#hero" class="nav-logo" aria-label="ASTRONZ 26 Home"><i class="fi fi-sr-plane" style="color:var(--accent-cyan);margin-right:.4rem;vertical-align:middle"></i>ASTRONZ</a>
+  <ul class="nav-links">
+    <li><a href="#hero"   aria-label="Mission">MISSION</a></li>
+    <li><a href="#events" aria-label="Flight Board">FLIGHT BOARD</a></li>
+    <li><a href="#crew"   aria-label="Crew">CREW</a></li>
+    <li><a href="#footer" aria-label="Coordinates">COORDINATES</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="zulu" id="zuluClock" aria-live="polite" aria-label="Zulu Time">ZULU: --:--:-- UTC</div>
+    <button class="atcbtn" id="atcBtn" aria-label="Toggle ATC Audio" aria-pressed="false">ATC AUDIO: OFF 🔇</button>
+  </div>
+</nav>
+
+<!-- Scroll plane -->
+<div id="scplane" aria-hidden="true">
+  <svg viewBox="0 0 28 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14 1 L20 14 L28 18 L20 20 L18 34 L14 29 L10 34 L8 20 L0 18 L8 14 Z" fill="#00D4FF" opacity=".9"/>
+  </svg>
+  <span class="alt-lbl">ALT</span>
+</div>
+
+<!-- ══ MARQUEE DIVIDER ══ -->
+<div class="marquee-wrap" aria-hidden="true">
+  <div class="marquee-track">
+    <div class="marquee-group">
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+    </div>
+    <div class="marquee-group" aria-hidden="true">
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HERO ══ -->
+<section id="hero" role="region" aria-label="Hero Section">
+  <div class="hero-bg"></div>
+  <div class="hero-cont">
+    <div class="hero-hud glass fiu">
+      <div class="hero-badge">[ DSCET · DEPT. OF AERONAUTICAL ENGINEERING ]</div>
+      <h1 class="hero-title">
+        <span class="ht1">CLEARED FOR TAKEOFF:</span>
+        <span class="ht2">ASTRONZ '26</span>
+      </h1>
+      <div class="hero-div"></div>
+      <p class="hero-sub">Navigate the Future of Aviation.</p>
+      <div class="cta-wrap">
+        <button type="button" id="ctaBtn" class="cta-btn" aria-label="Start clearance sequence">
+          <div class="cta-l">✈</div>
+          <div class="cta-sep"></div>
+          <div class="cta-r">
+            <span class="cta-main">REQUEST CLEARANCE</span>
+            <span class="cta-sub">(Register Now)</span>
+          </div>
+        </button>
+      </div>
+      <p class="scroll-hint">SCROLL TO INITIATE FLIGHT SEQUENCE ↓</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MARQUEE DIVIDER (bottom) ══ -->
+<div class="marquee-wrap" aria-hidden="true" style="transform:scaleX(-1)">
+  <div class="marquee-track" style="animation-duration:28s">
+    <div class="marquee-group">
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+    </div>
+    <div class="marquee-group" aria-hidden="true">
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+      <span>---</span><span class="marquee-plane">✈</span><span>---</span><span>→</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EVENTS ══ -->
+<section id="events" role="region" aria-label="Events — Flight Schedule">
+  <div class="sec-hdr fiu">
+    <p class="sec-lbl">◈ MISSION CONTROL ◈</p>
+    <h2 class="sec-ttl">FLIGHT SCHEDULE — DEPARTURES 2026</h2>
+    <div class="runway-scroll-outer" aria-hidden="true">
+      <div class="runway-scroll-inner">
+        <div class="runway-group">
+          <span class="runway-track">— — — — — ✈ — — — — → &nbsp;&nbsp;&nbsp;</span>
+          <span class="runway-track">— — — — — ✈ — — — — → &nbsp;&nbsp;&nbsp;</span>
+          <span class="runway-track">— — — — — ✈ — — — — → &nbsp;&nbsp;&nbsp;</span>
+        </div>
+        <div class="runway-group" aria-hidden="true">
+          <span class="runway-track">— — — — — ✈ — — — — → &nbsp;&nbsp;&nbsp;</span>
+          <span class="runway-track">— — — — — ✈ — — — — → &nbsp;&nbsp;&nbsp;</span>
+          <span class="runway-track">— — — — — ✈ — — — — → &nbsp;&nbsp;&nbsp;</span>
+        </div>
+      </div>
+    </div>
+    <p class="sec-sub">SELECT YOUR TERMINAL AND CHOOSE YOUR MISSION, PILOT.</p>
+  </div>
+
+  <div class="terminals">
+    <!-- TERMINAL A -->
+    <div class="tpanel glass fiu">
+      <div class="thdr tha">
+        <div class="thl"><div class="led leda" aria-hidden="true"></div>TERMINAL A // TECHNICAL HANGAR</div>
+        <div class="thr">GATE A1–A5 | ₹150/PERSON</div>
+      </div>
+      <div class="elist">
+        <div class="erow" data-event="ae101" role="button" tabindex="0" aria-label="View Aqua Missile details">
+          <div class="emain">
+            <span class="eflt">AE-101</span>
+            <span class="eico-wrap"><i class="fi fi-rr-rocket"></i></span>
+            <span class="enm">AQUA MISSILE</span>
+            <span class="etm">2+ MEMBERS</span>
+            <span class="sbadge sba">BOARDING</span>
+            <button class="exbtn" aria-label="Open Aqua Missile details">▼</button>
+          </div>
+        </div>
+        <div class="erow" data-event="ae102" role="button" tabindex="0" aria-label="View CAD Modelling details">
+          <div class="emain">
+            <span class="eflt">AE-102</span>
+            <span class="eico-wrap"><i class="fi fi-rr-drafting-compass"></i></span>
+            <span class="enm">CAD MODELLING</span>
+            <span class="etm">INDIVIDUAL</span>
+            <span class="sbadge sbo">ON TIME</span>
+            <button class="exbtn" aria-label="Open CAD Modelling details">▼</button>
+          </div>
+        </div>
+        <div class="erow" data-event="ae103" role="button" tabindex="0" aria-label="View Aircrash Investigation details">
+          <div class="emain">
+            <span class="eflt">AE-103</span>
+            <span class="eico-wrap"><i class="fi fi-rr-search-alt"></i></span>
+            <span class="enm">AIRCRASH INVESTIGATION</span>
+            <span class="etm">3–5 MEMBERS</span>
+            <span class="sbadge sbf">FINAL CALL</span>
+            <button class="exbtn" aria-label="Open Aircrash Investigation details">▼</button>
+          </div>
+        </div>
+        <div class="erow" data-event="ae104" role="button" tabindex="0" aria-label="View Paper Presentation details">
+          <div class="emain">
+            <span class="eflt">AE-104</span>
+            <span class="eico-wrap"><i class="fi fi-rr-document"></i></span>
+            <span class="enm">PAPER PRESENTATION</span>
+            <span class="etm">TEAM</span>
+            <span class="sbadge sbo">ON TIME</span>
+            <button class="exbtn" aria-label="Open Paper Presentation details">▼</button>
+          </div>
+        </div>
+        <div class="erow" data-event="ae105" role="button" tabindex="0" aria-label="View Chuck Glider Modelling details">
+          <div class="emain">
+            <span class="eflt">AE-105</span>
+            <span class="eico-wrap"><i class="fi fi-rr-paper-plane"></i></span>
+            <span class="enm">CHUCK GLIDER MODELLING</span>
+            <span class="etm">2+ MEMBERS</span>
+            <span class="sbadge sba">BOARDING</span>
+            <button class="exbtn" aria-label="Open Chuck Glider details">▼</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TERMINAL B -->
+    <div class="tpanel glass fiu">
+      <div class="thdr thb">
+        <div class="thl"><div class="led ledb" aria-hidden="true"></div>TERMINAL B // GROUND CONTROL</div>
+        <div class="thr">GATE B1–B5 | ₹150/PERSON</div>
+      </div>
+      <div class="elist">
+        <div class="erow" data-event="gc201" role="button" tabindex="0" aria-label="View Morse Code details">
+          <div class="emain">
+            <span class="eflt">GC-201</span>
+            <span class="eico-wrap"><i class="fi fi-rr-signal-alt"></i></span>
+            <span class="enm">MORSE CODE</span>
+            <span class="etm">2 MEMBERS</span>
+            <span class="sbadge sbo">ON TIME</span>
+            <button class="exbtn" aria-label="Open Morse Code details">▼</button>
+          </div>
+        </div>
+        <div class="erow" data-event="gc202" role="button" tabindex="0" aria-label="View Aero Puzzle details">
+          <div class="emain">
+            <span class="eflt">GC-202</span>
+            <span class="eico-wrap"><i class="fi fi-rr-puzzle"></i></span>
+            <span class="enm">AERO PUZZLE</span>
+            <span class="etm">2 MEMBERS</span>
+            <span class="sbadge sba">BOARDING</span>
+            <button class="exbtn" aria-label="Open Aero Puzzle details">▼</button>
+          </div>
+        </div>
+        <div class="erow" data-event="gc203" role="button" tabindex="0" aria-label="View Gravity Crumble details">
+          <div class="emain">
+            <span class="eflt">GC-203</span>
+            <span class="eico-wrap"><i class="fi fi-rr-feather"></i></span>
+            <span class="enm">GRAVITY CRUMBLE</span>
+            <span class="etm">2 MEMBERS</span>
+            <span class="sbadge sbf">FINAL CALL</span>
+            <button class="exbtn" aria-label="Open Gravity Crumble details">▼</button>
+          </div>
+        </div>
+        <div class="erow" data-event="gc204" role="button" tabindex="0" aria-label="View Spot the Bird details">
+          <div class="emain">
+            <span class="eflt">GC-204</span>
+            <span class="eico-wrap"><i class="fi fi-rr-binoculars"></i></span>
+            <span class="enm">SPOT THE BIRD</span>
+            <span class="etm">2 MEMBERS</span>
+            <span class="sbadge sbo">ON TIME</span>
+            <button class="exbtn" aria-label="Open Spot the Bird details">▼</button>
+          </div>
+        </div>
+        <div class="erow" data-event="gc205" role="button" tabindex="0" aria-label="View Fold and Fly details">
+          <div class="emain">
+            <span class="eflt">GC-205</span>
+            <span class="eico-wrap"><i class="fi fi-rr-plane-alt"></i></span>
+            <span class="enm">FOLD &amp; FLY</span>
+            <span class="etm">INDIVIDUAL</span>
+            <span class="sbadge sba">BOARDING</span>
+            <button class="exbtn" aria-label="Open Fold and Fly details">▼</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /terminals -->
+
+  <!-- Boarding Pass -->
+  <div class="bpass fiu" aria-label="Event Ticket">
+    <div class="bpl">
+      <div class="bpnt"></div><div class="bpnb"></div>
+      <div class="bpm">ASTRONZ '26 · ALL EVENTS PASS</div>
+      <div class="bps">DSCET AERONAUTICAL ENGINEERING · VALID ONE DAY ONLY</div>
+      <div class="bpi">
+        <span>PASSENGER: <span>[ YOUR NAME ]</span></span>
+        <span>GATE: <span>OPEN</span></span>
+        <span>SEAT: <span>[ YOUR RANK ]</span></span>
+      </div>
+    </div>
+    <div class="bpdiv"></div>
+    <div class="bpr">
+      <div class="bpprice">₹150</div>
+      <div class="bppl">PER EVENT PER PERSON</div>
+      <div class="bpbc"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CREW ══ -->
+<section id="crew" role="region" aria-label="Flight Crew">
+  <div class="sec-hdr fiu">
+    <p class="sec-lbl">◈ PERSONNEL ◈</p>
+    <h2 class="sec-ttl">FLIGHT CREW — MISSION PERSONNEL</h2>
+  </div>
+
+  <!-- Commanding Officers -->
+  <div class="crow fiu">
+    <p class="crow-lbl">[ COMMANDING OFFICERS ]</p>
+    <div class="cgrid">
+      <div class="ibadge glass" aria-label="Dr. S. Nandakumar, Assistant Professor">
+        <div class="lhole" aria-hidden="true"></div>
+        <div class="btop"><span class="bwings"><i class="fi fi-sr-badge" style="color:rgba(10,13,26,0.8);font-size:1rem"></i></span><span class="borgtext">DSCET ATC<br/>AUTHORIZED</span></div>
+        <div class="bbody">
+          <div class="bavatar avs">👨‍✈️<div class="rstripes"><div class="rs rsg"></div><div class="rs rsg"></div><div class="rs rsg"></div></div></div>
+          <div class="bname">DR. S. NANDAKUMAR</div>
+          <div class="brole">Assistant Professor</div>
+          <div class="bfreq" style="opacity:.4;font-size:.52rem;">FREQ: +91 79048 06730</div>
+          <div class="bid">ID: ATC-DSCET-2026-01</div>
+        </div>
+        <div class="bbarcode"></div>
+      </div>
+      <div class="ibadge glass" aria-label="Mr. M. Senbagan, Assistant Professor">
+        <div class="lhole" aria-hidden="true"></div>
+        <div class="btop"><span class="bwings"><i class="fi fi-sr-badge" style="color:rgba(10,13,26,0.8);font-size:1rem"></i></span><span class="borgtext">DSCET ATC<br/>AUTHORIZED</span></div>
+        <div class="bbody">
+          <div class="bavatar avs">👨‍✈️<div class="rstripes"><div class="rs rsg"></div><div class="rs rsg"></div><div class="rs rsg"></div></div></div>
+          <div class="bname">MR. M. SENBAGAN</div>
+          <div class="brole">Assistant Professor</div>
+          <div class="bfreq" style="opacity:.4;font-size:.52rem;">FREQ: +91 97917 22715</div>
+          <div class="bid">ID: ATC-DSCET-2026-02</div>
+        </div>
+        <div class="bbarcode"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flight Captains -->
+  <div class="crow fiu">
+    <p class="crow-lbl">[ FLIGHT CAPTAINS ]</p>
+    <div class="cgrid">
+      <div class="ibadge glass" aria-label="Purshoth G, IV Year Student Coordinator">
+        <div class="lhole" aria-hidden="true"></div>
+        <div class="btop"><span class="bwings"><i class="fi fi-rr-id-badge" style="color:rgba(10,13,26,0.8);font-size:1rem"></i></span><span class="borgtext">DSCET ATC<br/>CAPTAIN</span></div>
+        <div class="bbody">
+          <div class="bavatar avc">🧑‍✈️<div class="rstripes"><div class="rs rss"></div><div class="rs rss"></div></div></div>
+          <div class="bname">PURSHOTH G</div>
+          <div class="brole">IV Year — Student Coord.</div>
+          <div class="bfreq">FREQ: +91 93459 70014</div>
+          <div class="bid">ID: ATC-DSCET-2026-03</div>
+        </div>
+        <div class="bbarcode"></div>
+      </div>
+      <div class="ibadge glass" aria-label="Manishasree R, IV Year Student Coordinator">
+        <div class="lhole" aria-hidden="true"></div>
+        <div class="btop"><span class="bwings"><i class="fi fi-rr-id-badge" style="color:rgba(10,13,26,0.8);font-size:1rem"></i></span><span class="borgtext">DSCET ATC<br/>CAPTAIN</span></div>
+        <div class="bbody">
+          <div class="bavatar avc">👩‍✈️<div class="rstripes"><div class="rs rss"></div><div class="rs rss"></div></div></div>
+          <div class="bname">MANISHASREE R</div>
+          <div class="brole">IV Year — Student Coord.</div>
+          <div class="bfreq">FREQ: +91 63822 76610</div>
+          <div class="bid">ID: ATC-DSCET-2026-04</div>
+        </div>
+        <div class="bbarcode"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ EVENT MODAL ══ -->
+<div id="event-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title-text">
+  <div id="event-modal-card">
+    <div class="modal-header">
+      <span class="modal-flt-badge" id="modal-flt-num">AE-101</span>
+      <div class="modal-icon-wrap" id="modal-icon-wrap"><i class="fi fi-rr-rocket" id="modal-icon"></i></div>
+      <span class="modal-title" id="modal-title-text">EVENT NAME</span>
+      <button class="modal-close" id="modal-close-btn" aria-label="Close modal">×</button>
+    </div>
+    <div class="modal-sep"></div>
+    <p class="modal-desc" id="modal-desc"></p>
+    <ul class="modal-rules" id="modal-rules"></ul>
+    <div id="modal-crew-block" style="display:none">
+      <div class="modal-crew-label">ASSIGNED CREW:</div>
+      <div class="modal-crew-names" id="modal-crew-names"></div>
+    </div>
+    <div class="modal-footer-row">
+      <span class="modal-team-badge" id="modal-team"></span>
+      <span class="modal-fee-badge">₹150 / PERSON</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CLEARANCE SEQUENCE OVERLAY ══ -->
+<div class="phase-overlay" id="phaseOverlay">
+  <div class="scanlines"></div>
+  <canvas id="starCanvas" class="stars-bg"></canvas>
+  <button type="button" class="seq-skip" id="seqSkipBtn" aria-label="Skip sequence">SKIP x</button>
+
+  <div class="phase-dots" aria-hidden="true">
+    <div class="pdot active" id="pd0"></div>
+    <div class="pdot" id="pd1"></div>
+    <div class="pdot" id="pd2"></div>
+    <div class="pdot" id="pd3"></div>
+  </div>
+
+  <div class="phase" id="phase1">
+    <div class="phase-header">PHASE 1 - DATA INTEGRATION</div>
+    <div class="canister">
+      <div class="canister-body">
+        <div class="canister-label">ASTRONZ '26</div>
+        <div style="width:80%;height:2px;background:rgba(0,212,255,.3)"></div>
+        <div class="canister-logo">DSCET - AE DEPT</div>
+        <div style="font-size:.5rem;color:rgba(0,212,255,.35);font-family:var(--font-mono);letter-spacing:.1em">FLIGHT DATA CANISTER</div>
+      </div>
+    </div>
+    <div class="arm"></div>
+    <div class="arm-head"></div>
+    <div style="margin-top:1.5rem">
+      <div class="phase-big">PACKING FLIGHT DATA</div>
+      <div style="font-family:var(--font-mono);font-size:.62rem;color:var(--metal);letter-spacing:.2em;margin-top:.5rem">LOADING CANISTER INTO CARGO BAY...</div>
+    </div>
+  </div>
+
+  <div class="phase" id="phase2">
+    <div class="phase-header">PHASE 2 - SYSTEM CONFIRMATION</div>
+    <div class="status-panel">
+      <div class="status-row">
+        <div class="status-dot"></div>
+        <div class="status-text">LOADED &amp; SEALED</div>
+      </div>
+      <div class="status-sub">FLIGHT DATA INTEGRATED</div>
+    </div>
+    <div style="margin-top:1rem">
+      <div class="phase-big">DEPARTURE SEQUENCE COMMENCING</div>
+      <div style="font-family:var(--font-mono);font-size:.62rem;color:var(--metal);letter-spacing:.2em;margin-top:.6rem">CARGO BAY SEALED - ALL SYSTEMS NOMINAL</div>
+    </div>
+  </div>
+
+  <div class="phase" id="phase3">
+    <div class="phase-header">PHASE 3 - PRE-FLIGHT SYSTEMS CHECK</div>
+    <svg class="aircraft-silhouette" viewBox="0 0 280 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 40 L180 30 L260 40 L180 50 Z" fill="rgba(0,212,255,0.15)" stroke="#00D4FF" stroke-width="1"/>
+      <path d="M100 30 L140 10 L160 30 Z" fill="rgba(0,212,255,0.2)" stroke="#00D4FF" stroke-width="0.8"/>
+      <path d="M100 50 L130 70 L155 50 Z" fill="rgba(255,183,0,0.15)" stroke="#FFB700" stroke-width="0.8"/>
+      <path d="M240 38 L270 40 L240 42 Z" fill="#FFB700"/>
+      <circle cx="185" cy="40" r="3" fill="#00D4FF" opacity="0.8"/>
+      <circle cx="170" cy="35" r="1.5" fill="#00D4FF" opacity="0.5"/>
+      <path d="M18 40 L8 40" stroke="#FFB700" stroke-width="1.5" stroke-dasharray="3,3"/>
+    </svg>
+    <div class="checklist">
+      <div class="check-item"><span class="check-ok">[ OK ]</span> AVIONICS SYSTEMS NOMINAL</div>
+      <div class="check-item"><span class="check-ok">[ OK ]</span> FLIGHT DATA CANISTER SECURED</div>
+      <div class="check-item"><span class="check-ok">[ OK ]</span> PLASMA DRIVES ONLINE</div>
+      <div class="check-item"><span class="check-ok">[ OK ]</span> REGISTRATION DATA VERIFIED</div>
+      <div class="check-item"><span class="check-ok">[ OK ]</span> CLEARANCE APPROVED - ATC TOWER</div>
+    </div>
+    <div class="hum-bar"><div class="hum-fill"></div></div>
+    <div style="font-family:var(--font-mono);font-size:.6rem;color:var(--metal);letter-spacing:.18em;margin-top:.8rem">ENGINES SPOOLING TO FULL POWER...</div>
+  </div>
+
+  <div class="phase" id="phase4">
+    <div class="phase-header" style="color:var(--accent-amber)">PHASE 4 - DEPARTURE</div>
+    <div class="liftoff-scene" id="liftoffScene">
+      <div class="vortex-ring" style="width:40px;height:40px;bottom:20px;left:calc(50% - 20px);animation:vortex 2s .2s ease-out infinite"></div>
+      <div class="vortex-ring" style="width:70px;height:70px;bottom:5px;left:calc(50% - 35px);animation:vortex 2s .6s ease-out infinite"></div>
+      <div class="engine-plume" style="background:linear-gradient(to top,rgba(255,100,0,.9),rgba(0,180,255,.7),transparent)"></div>
+      <div class="aircraft-liftoff">
+        <svg width="80" height="50" viewBox="0 0 80 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 25 L55 15 L75 25 L55 35 Z" fill="rgba(0,212,255,0.3)" stroke="#00D4FF" stroke-width="1.2"/>
+          <path d="M28 15 L40 3 L50 15 Z" fill="rgba(0,212,255,0.4)" stroke="#00D4FF" stroke-width="0.8"/>
+          <path d="M28 35 L38 47 L48 35 Z" fill="rgba(255,183,0,0.3)" stroke="#FFB700" stroke-width="0.8"/>
+        </svg>
+      </div>
+    </div>
+    <div class="phase-big" style="color:var(--accent-amber);font-size:clamp(1.2rem,4vw,2rem)">LIFT-OFF CONFIRMED</div>
+    <div style="font-family:var(--font-mono);font-size:.62rem;color:var(--metal);letter-spacing:.2em;margin-top:.6rem">ASTRONZ '26 - REGISTRATION COMPLETE</div>
+    <div class="liftoff-text">REGISTRATION COMPLETE<br/>LIFT-OFF CONFIRMED<br/><span style="color:rgba(143,163,177,.35)">DSCET-AE-2026-SQUAWK7700</span></div>
+    <div class="phase4-actions">
+      <button type="button" id="proceedToEvents" class="phase4-btn">OPEN GOOGLE FORM -></button>
+      <button type="button" id="backHomeBtn" class="phase4-btn">BACK TO HOME</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══ -->
+<footer id="footer" role="contentinfo" aria-label="Footer — Radar Coordinates">
+  <div class="fsweep" aria-hidden="true"></div>
+  <div class="frwy" aria-hidden="true">
+    <div class="frwy-track">
+      <div class="frwy-group">
+        <span class="frwy-txt">— — — — ✈ — — — — → &nbsp; — — — — ✈ — — — — → &nbsp; — — — — ✈ — — — — → &nbsp; — — — — ✈ — — — — → &nbsp; — — — — ✈ — — — — → &nbsp;</span>
+      </div>
+      <div class="frwy-group" aria-hidden="true">
+        <span class="frwy-txt">— — — — ✈ — — — — → &nbsp; — — — — ✈ — — — — → &nbsp; — — — — ✈ — — — — → &nbsp; — — — — ✈ — — — — → &nbsp; — — — — ✈ — — — — → &nbsp;</span>
+      </div>
+    </div>
+  </div>
+  <div class="floc">
+    <div class="chwrap" aria-hidden="true">
+      <div class="chring"></div><div class="chring"></div><div class="chring"></div>
+      <div class="chh"></div><div class="chv"></div><div class="chdot"></div>
+    </div>
+    <p class="locked">TARGET LOCKED</p>
+    <p class="cname">DHANALAKSHMI SRINIVASAN COLLEGE OF<br/>ENGINEERING AND TECHNOLOGY</p>
+    <p class="dline">DEPARTMENT OF AERONAUTICAL ENGINEERING</p>
+    <p class="aline">ECR, Mamallapuram, Chennai — Tamil Nadu, India</p>
+  </div>
+  <div class="srow" aria-label="Social Media">
+    <a href="#" class="sbtn" aria-label="Instagram"><i class="fi fi-brands-instagram" style="font-size:1.3rem"></i></a>
+    <a href="#" class="sbtn" aria-label="LinkedIn"><i class="fi fi-brands-linkedin" style="font-size:1.3rem"></i></a>
+    <a href="#" class="sbtn" aria-label="YouTube"><i class="fi fi-brands-youtube" style="font-size:1.3rem"></i></a>
+  </div>
+  <div class="fcopy">
+    <span class="fcs">TRANSPONDER: SQUAWK 7700 → CLEARED FINAL</span>
+    <span class="fcm">© 2026 ASTRONZ · DSCET AERONAUTICAL ENGINEERING · ALL SYSTEMS NOMINAL.</span>
+    <span class="fcs" aria-hidden="true">LAT: 12.6308°N · LON: 80.1919°E</span>
+  </div>
+</footer>
+
+<script>
+/* ─── Cursor & trail ─── */
+const cur = document.getElementById('cursor');
+const TCOUNT = 8;
+const tEls = [];
+for(let i = 0; i < TCOUNT; i++){
+  const d = document.createElement('div');
+  d.className = 'ctrail';
+  const s = Math.round(6 - i * 0.5);
+  d.style.cssText = `width:${s}px;height:${s}px;background:${i < 4 ? `rgba(0,212,255,${(0.35-i*0.04).toFixed(2)})` : `rgba(255,183,0,${(0.25-i*0.03).toFixed(2)})`};`;
+  document.body.appendChild(d);
+  tEls.push(d);
+}
+let mx = 0, my = 0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cur.style.left = mx + 'px'; cur.style.top = my + 'px';
+  tEls.forEach((t, i) => setTimeout(() => { t.style.left = mx + 'px'; t.style.top = my + 'px'; }, i * 18));
+});
+
+/* ─── Preloader ─── */
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const pl = document.getElementById('preloader');
+    pl.classList.add('fade-out');
+    setTimeout(() => pl.style.display = 'none', 1000);
+    document.querySelector('#hero .fiu').classList.add('vis');
+  }, 3900);
+});
+
+/* ─── Zulu clock ─── */
+function updateZulu(){
+  const n = new Date();
+  document.getElementById('zuluClock').textContent =
+    `ZULU: ${String(n.getUTCHours()).padStart(2,'0')}:${String(n.getUTCMinutes()).padStart(2,'0')}:${String(n.getUTCSeconds()).padStart(2,'0')} UTC`;
+}
+setInterval(updateZulu, 1000); updateZulu();
+
+/* ─── ATC toggle ─── */
+let aOn = false;
+document.getElementById('atcBtn').addEventListener('click', () => {
+  aOn = !aOn;
+  const b = document.getElementById('atcBtn');
+  b.textContent = `ATC AUDIO: ${aOn ? 'ON 🔊' : 'OFF 🔇'}`;
+  b.setAttribute('aria-pressed', aOn);
+});
+
+/* ─── Scroll plane ─── */
+const sp = document.getElementById('scplane');
+if(sp) window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+  sp.style.top = (68 + pct * (window.innerHeight - 160)) + 'px';
+});
+
+/* ─── FIX 1: Event data store + Modal system ─── */
+const EVENT_DATA = {
+  ae101: {
+    flight: 'AE-101', icon: 'fi fi-rr-rocket', name: 'AQUA MISSILE',
+    team: '2+ MEMBERS',
+    desc: 'Water-powered bottle rocket. Max 2L bottle. 1 launch attempt. 1-hour build window on site. Judged on maximum altitude.',
+    rules: ['Maximum bottle size: 2 litres','Single launch attempt per team','60-minute build window on-site','No pre-built components allowed'],
+    crew: null
+  },
+  ae102: {
+    flight: 'AE-102', icon: 'fi fi-rr-drafting-compass', name: 'CAD MODELLING',
+    team: 'INDIVIDUAL',
+    desc: 'Design an aerospace component in CATIA V5. Bring your own laptop. Time-based scoring with accuracy bonus points.',
+    rules: ['Software: CATIA V5 (own laptop)','Time-based scoring applies','No internet access during event','Reference images provided on-site'],
+    crew: 'FLT. LT. Danish Jaison B — III Year\nFLT. LT. Tharshan B — II Year'
+  },
+  ae103: {
+    flight: 'AE-103', icon: 'fi fi-rr-search-alt', name: 'AIRCRASH INVESTIGATION',
+    team: '3–5 MEMBERS',
+    desc: 'Analyse a staged accident using flight data, wreckage photos, and weather reports. Present forensic findings. No electronic devices.',
+    rules: ['Teams: 3 to 5 members','No electronic devices allowed','Evidence packets provided at start','Presentation: 10 minutes + Q&A'],
+    crew: 'FLT. LT. Manishasree R — IV Year\nFLT. LT. Jeyasheela A — III Year'
+  },
+  ae104: {
+    flight: 'AE-104', icon: 'fi fi-rr-document', name: 'PAPER PRESENTATION',
+    team: 'TEAM',
+    desc: 'Broadcast your aeronautical research to the command centre. Original work only. Abstract submission required in advance.',
+    rules: ['Original aeronautical engineering topic','Abstract submission required prior','Max 15 slides — PPT or PDF','Judged on content, delivery, Q&A'],
+    crew: null
+  },
+  ae105: {
+    flight: 'AE-105', icon: 'fi fi-rr-paper-plane', name: 'CHUCK GLIDER MODELLING',
+    team: '2+ MEMBERS',
+    desc: 'Build and launch a hand-glider (max 30×30cm). Balsa/foam only. Two rounds: max distance + max air time judged separately.',
+    rules: ['Max dimensions: 30cm × 30cm','Materials: balsa wood or foam only','Round 1: distance | Round 2: air time','Hand-launched from marked line'],
+    crew: 'FLT. LT. Somasekhar Y — IV Year'
+  },
+  gc201: {
+    flight: 'GC-201', icon: 'fi fi-rr-signal-alt', name: 'MORSE CODE',
+    team: '2 MEMBERS',
+    desc: 'Decode Morse via light blinks (Round 1) then sound signals (Round 2). No electronic devices. International Morse Code standard.',
+    rules: ['Round 1: visual light blink decoding','Round 2: audio signal decoding','No electronic devices permitted','International Morse Code standard'],
+    crew: 'FLT. LT. Ramya S — IV Year\nFLT. LT. Fathima R — II Year'
+  },
+  gc202: {
+    flight: 'GC-202', icon: 'fi fi-rr-puzzle', name: 'AERO PUZZLE',
+    team: '2 MEMBERS',
+    desc: 'Reassemble a scrambled aircraft image puzzle. First correct and complete reassembly wins. Simultaneous start for all teams.',
+    rules: ['Aircraft image puzzle provided','First correct completion wins','Simultaneous start for all teams'],
+    crew: 'FLT. LT. Manoj S — IV Year'
+  },
+  gc203: {
+    flight: 'GC-203', icon: 'fi fi-rr-feather', name: 'GRAVITY CRUMBLE',
+    team: '2 MEMBERS',
+    desc: 'Design a protective egg structure (≤500g) dropped from 60 feet. One attempt. Egg survival is the only metric that matters.',
+    rules: ['Total structure weight: max 500g','Drop height: 60 feet','One attempt per team only','Egg provided by organisers'],
+    crew: null
+  },
+  gc204: {
+    flight: 'GC-204', icon: 'fi fi-rr-binoculars', name: 'SPOT THE BIRD',
+    team: '2 MEMBERS',
+    desc: 'Identify aircraft images and aviation logos in 2 rounds. Round 2 features rare and military aircraft with partial views.',
+    rules: ['Round 1: common commercial aircraft','Round 2: rare / military aircraft (partial)','No internet access','Written answers only'],
+    crew: 'FLT. LT. Abi S — IV Year\nFLT. LT. Dejashri K — I Year'
+  },
+  gc205: {
+    flight: 'GC-205', icon: 'fi fi-rr-plane-alt', name: 'FOLD & FLY',
+    team: 'INDIVIDUAL',
+    desc: 'Fold organiser-provided paper into an aircraft. Two rounds — maximum distance wins. No cutting, tearing, or adhesive allowed.',
+    rules: ['Paper provided by organisers','No cutting, tearing, or glue','Two throws: best distance counts','Launched from marked line'],
+    crew: 'FLT. LT. Prasanth S — IV Year\nFLT. LT. Mythili M — I Year'
+  }
+};
+
+const overlay   = document.getElementById('event-modal-overlay');
+const card      = document.getElementById('event-modal-card');
+const closeBtn  = document.getElementById('modal-close-btn');
+let activeBtn   = null;
+
+function openModal(eventId){
+  const data = EVENT_DATA[eventId];
+  if(!data) return;
+
+  // Populate
+  document.getElementById('modal-flt-num').textContent    = data.flight;
+  document.getElementById('modal-title-text').textContent = data.name;
+  document.getElementById('modal-desc').textContent       = data.desc;
+  document.getElementById('modal-team').textContent       = data.team;
+
+  // Icon
+  const iconEl = document.getElementById('modal-icon');
+  iconEl.className = data.icon;
+
+  // Rules — staggered animation
+  const rulesList = document.getElementById('modal-rules');
+  rulesList.innerHTML = '';
+  data.rules.forEach((r, i) => {
+    const li = document.createElement('li');
+    li.textContent = r;
+    rulesList.appendChild(li);
+    setTimeout(() => li.classList.add('rule-vis'), 80 + i * 60);
+  });
+
+  // Crew
+  const crewBlock = document.getElementById('modal-crew-block');
+  const crewNames = document.getElementById('modal-crew-names');
+  if(data.crew){
+    crewNames.innerHTML = data.crew.replace(/\n/g,'<br/>');
+    crewBlock.style.display = 'block';
+  } else {
+    crewBlock.style.display = 'none';
+  }
+
+  overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(){
+  overlay.classList.remove('active');
+  document.body.style.overflow = '';
+  if(activeBtn){ activeBtn.classList.remove('open'); activeBtn = null; }
+}
+
+// Open on row click
+document.querySelectorAll('.erow').forEach(row => {
+  row.addEventListener('click', () => {
+    const eid  = row.dataset.event;
+    const btn  = row.querySelector('.exbtn');
+    activeBtn  = btn;
+    if(btn) btn.classList.add('open');
+    openModal(eid);
+  });
+  row.addEventListener('keydown', e => {
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); row.click(); }
+  });
+  // Stop button click from double-firing row click
+  const btn = row.querySelector('.exbtn');
+  if(btn) btn.addEventListener('click', e => e.stopPropagation());
+});
+
+closeBtn.addEventListener('click', closeModal);
+overlay.addEventListener('click', e => { if(e.target === overlay) closeModal(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
+
+/* ─── Clearance sequence (merged from marquee page) ─── */
+const phases = ['phase1', 'phase2', 'phase3', 'phase4'];
+const dots = ['pd0', 'pd1', 'pd2', 'pd3'];
+let seqTimer;
+const GOOGLE_FORM_URL = 'https://forms.gle/your-form-id';
+
+function showPhase(n){
+  phases.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if(el) el.classList.remove('show');
+    const dot = document.getElementById(dots[i]);
+    if(dot) dot.classList.remove('active');
+  });
+
+  const phaseEl = document.getElementById(phases[n]);
+  const dotEl = document.getElementById(dots[n]);
+  if(phaseEl) phaseEl.classList.add('show');
+  if(dotEl) dotEl.classList.add('active');
+
+  if(n === 3){
+    const scene = document.getElementById('liftoffScene');
+    if(scene){
+      setTimeout(() => scene.classList.add('shake'), 400);
+      setTimeout(() => scene.classList.remove('shake'), 2200);
+    }
+  }
+}
+
+function startClearance(){
+  const overlayEl = document.getElementById('phaseOverlay');
+  if(!overlayEl) return;
+  overlayEl.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  showPhase(0);
+  initStarCanvas();
+
+  let current = 0;
+  clearInterval(seqTimer);
+  seqTimer = setInterval(() => {
+    if(current >= phases.length - 1){
+      clearInterval(seqTimer);
+      return;
+    }
+    current += 1;
+    showPhase(current);
+  }, 3200);
+}
+
+function endClearance(){
+  clearInterval(seqTimer);
+  const overlayEl = document.getElementById('phaseOverlay');
+  if(overlayEl) overlayEl.classList.remove('active');
+  document.body.style.overflow = '';
+
+  phases.forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.classList.remove('show');
+  });
+
+  const scene = document.getElementById('liftoffScene');
+  if(scene) scene.classList.remove('shake');
+}
+
+function initStarCanvas(){
+  const canvas = document.getElementById('starCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const stars = Array.from({ length: 180 }, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 1.2 + 0.2,
+    a: Math.random(),
+    s: Math.random() * 0.008 + 0.002
+  }));
+
+  function draw(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(star => {
+      star.a += star.s;
+      if(star.a > 1) star.a = 0.1;
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${star.a})`;
+      ctx.fill();
+    });
+
+    const overlayEl = document.getElementById('phaseOverlay');
+    if(overlayEl && overlayEl.classList.contains('active')){
+      requestAnimationFrame(draw);
+    }
+  }
+
+  draw();
+}
+
+window.addEventListener('resize', () => {
+  const overlayEl = document.getElementById('phaseOverlay');
+  if(overlayEl && overlayEl.classList.contains('active')) initStarCanvas();
+});
+
+const ctaBtn = document.getElementById('ctaBtn');
+if(ctaBtn) ctaBtn.addEventListener('click', startClearance);
+
+const skipBtn = document.getElementById('seqSkipBtn');
+if(skipBtn) skipBtn.addEventListener('click', endClearance);
+
+const proceedBtn = document.getElementById('proceedToEvents');
+if(proceedBtn){
+  proceedBtn.addEventListener('click', () => {
+    window.open(GOOGLE_FORM_URL, '_blank', 'noopener,noreferrer');
+  });
+}
+
+const backHomeBtn = document.getElementById('backHomeBtn');
+if(backHomeBtn){
+  backHomeBtn.addEventListener('click', () => {
+    endClearance();
+    document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+}
+
+/* ─── Intersection Observer ─── */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('vis'); io.unobserve(e.target); }});
+}, { threshold: 0.1 });
+document.querySelectorAll('.fiu').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
