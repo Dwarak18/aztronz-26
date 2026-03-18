@@ -8,8 +8,8 @@
   <meta property="og:title" content="ASTRONZ '26 — Navigate the Future of Aviation"/>
   <meta property="og:description" content="Annual Aeronautical Engineering Symposium, DSCET Chennai 2026"/>
   <meta property="og:type" content="website"/>
-  <link rel="icon" type="image/png" href="Logo.png"/>
-  <link rel="apple-touch-icon" href="Logo.png"/>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20128%20128'%3E%3Crect%20width='128'%20height='128'%20rx='24'%20fill='%230E1628'/%3E%3Ctext%20x='50%25'%20y='58%25'%20dominant-baseline='middle'%20text-anchor='middle'%20font-family='Inter,sans-serif'%20font-size='48'%20fill='%2300D4FF'%3EAZ%3C/text%3E%3C/svg%3E"/>
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20128%20128'%3E%3Crect%20width='128'%20height='128'%20rx='24'%20fill='%230E1628'/%3E%3Ctext%20x='50%25'%20y='58%25'%20dominant-baseline='middle'%20text-anchor='middle'%20font-family='Inter,sans-serif'%20font-size='48'%20fill='%2300D4FF'%3EAZ%3C/text%3E%3C/svg%3E"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet"/>
@@ -501,7 +501,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   <div class="hero-bg"></div>
   <div class="hero-cont">
     <div class="hero-hud glass fiu">
-      <img src="Logo.png" alt="ASTRONZ logo" class="hero-logo" onerror="this.style.display='none'"/>
+      <img src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20640%20240'%3E%3Crect%20width='640'%20height='240'%20fill='none'/%3E%3Ctext%20x='50%25'%20y='56%25'%20dominant-baseline='middle'%20text-anchor='middle'%20font-family='Roboto%20Mono,monospace'%20font-size='94'%20letter-spacing='8'%20fill='%2300D4FF'%3EASTRONZ%3C/text%3E%3C/svg%3E" alt="ASTRONZ logo" class="hero-logo"/>
       <div class="hero-badge">[ DSCET · DEPT. OF AERONAUTICAL ENGINEERING ]</div>
       <h1 class="hero-title">
         <span class="ht1">CLEARED FOR TAKEOFF:</span>
@@ -973,11 +973,7 @@ setInterval(updateZulu, 1000); updateZulu();
 
 /* ─── ATC toggle ─── */
 let aOn = false;
-const ATC_REAL_AUDIO_URL = 'atc-radio.mp3';
-const atcRealAudio = new Audio(ATC_REAL_AUDIO_URL);
-atcRealAudio.loop = true;
-atcRealAudio.preload = 'auto';
-atcRealAudio.volume = 0.42;
+let atcRealAudio = null;
 
 let atcCtx = null;
 let atcNoiseSource = null;
@@ -1092,11 +1088,15 @@ async function startAtcAudio(){
   stopAtcFallbackNoise();
   stopAtcBeeps();
 
-  let usingReal = true;
-  try {
-    await atcRealAudio.play();
-  } catch(_e) {
-    usingReal = false;
+  let usingReal = false;
+  if(atcRealAudio){
+    try {
+      await atcRealAudio.play();
+      usingReal = true;
+    } catch(_e) {
+      startAtcFallbackNoise();
+    }
+  } else {
     startAtcFallbackNoise();
   }
 
@@ -1105,7 +1105,7 @@ async function startAtcAudio(){
 }
 
 function stopAtcAudio(){
-  atcRealAudio.pause();
+  if(atcRealAudio) atcRealAudio.pause();
   stopAtcFallbackNoise();
   stopAtcBeeps();
 }
@@ -1278,7 +1278,7 @@ document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal();
 const phases = ['phase1', 'phase2', 'phase3', 'phase4'];
 const dots = ['pd0', 'pd1', 'pd2', 'pd3'];
 let seqTimer;
-const GOOGLE_FORM_URL = 'https://forms.gle/your-form-id';
+const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdzdL531Qgx8PHHbUUxSsuhTUGmPlb--wRi4G2e4fFkGaVqhg/viewform?usp=header';
 
 function showPhase(n){
   phases.forEach((id, i) => {
